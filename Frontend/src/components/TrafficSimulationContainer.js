@@ -7,7 +7,7 @@
   2. Kırmızı yanan taraf (Yan yollar) hızla tıkanır (%100'e yaklaşır).
   3. Görsel olarak "Birikme" (Queueing) efekti eklendi.
 */
-
+const API_URL = "https://traffic-backend-api.onrender.com";
 import React, { useState, useEffect, useRef } from 'react';
 import { 
     Box, Grid, Paper, Typography, LinearProgress, 
@@ -181,7 +181,7 @@ export default function TrafficSimulationContainer() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`http://localhost:8080/api/emergency/${endpoint}`, {}, {
+            const response = await axios.post(`${API_URL}/api/emergency/${endpoint}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -227,7 +227,7 @@ export default function TrafficSimulationContainer() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('http://localhost:8080/api/optimization/apply', {
+            const response = await axios.post(`${API_URL}/api/optimization/apply`, {
                 intersectionId: 1,
                 vehicleCount: waitingDensity, 
                 averageSpeed: Math.max(10, 60 - (waitingDensity / 2)),

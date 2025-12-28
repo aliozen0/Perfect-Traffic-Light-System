@@ -5,7 +5,7 @@
   - En tepeye "Varsayılan Kuralları Yükle" (Rule Engine Loader) paneli eklendi.
   - Gerekli Axios ve State mantıkları entegre edildi.
 */
-
+const API_URL = "https://traffic-backend-api.onrender.com";
 import React, { useState } from 'react';
 import { 
   Grid, Card, CardHeader, CardContent, Typography, FormControlLabel, Switch, 
@@ -50,7 +50,7 @@ export default function PoliciesTab({
           const token = localStorage.getItem('token');
           // Backend'deki "Create Defaults" endpoint'ine istek atıyoruz
           const response = await axios.post(
-              'http://localhost:8080/api/optimization/rules/create-defaults',
+              '${API_URL}/api/optimization/rules/create-defaults',
               {}, 
               {
                   headers: { 

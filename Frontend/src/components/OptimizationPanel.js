@@ -1,3 +1,4 @@
+const API_URL = "https://traffic-backend-api.onrender.com";
 import React, { useState } from 'react';
 import axios from 'axios';
 import { 
@@ -33,7 +34,7 @@ const OptimizationPanel = ({ onOptimizationComplete }) => {
         try {
             const token = localStorage.getItem('token');
             // Backend'e istek atıyoruz
-            const response = await axios.post('http://localhost:8080/api/optimization/apply', {
+            const response = await axios.post('${API_URL}/api/optimization/apply', {
                 intersectionId: 1,
                 vehicleCount: simulationData.vehicleCount,
                 averageSpeed: simulationData.averageSpeed,

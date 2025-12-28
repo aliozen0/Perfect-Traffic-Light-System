@@ -1,6 +1,6 @@
 // API Service for Backend Integration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
-
+// Render linkini doğrudan varsayılan yapıyoruz, böylece Vercel ayarı unutulsa bile çalışır.
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://traffic-backend-api.onrender.com/api';
 /**
  * Generic API call handler with error handling
  */

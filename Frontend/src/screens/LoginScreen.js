@@ -2,7 +2,7 @@
   Dosya: src/screens/LoginScreen.js
   Güncelleme: Google + Standart (E-posta/Şifre) Giriş Desteği
 */
-
+const API_URL = "https://traffic-backend-api.onrender.com";
 import React, { useState } from 'react';
 import { Box, Button, Typography, Paper, TextField, Divider, InputAdornment, IconButton } from '@mui/material';
 import { 
@@ -38,7 +38,7 @@ export default function LoginScreen({ onLogin }) {
 
     try {
         // Backend'e Login İsteği At
-        const response = await axios.post('http://localhost:8080/api/auth/login', {
+        const response = await axios.post('${API_URL}/api/auth/login', {
             username: email, // Backend 'username' bekliyor (DataSeeder'da email username olarak atandı)
             password: password
         });
@@ -65,7 +65,7 @@ export default function LoginScreen({ onLogin }) {
       
       if (ALLOWED_USERS.includes(user.email)) {
         // Google Login sonrası Backend'den Token Al (Önceki adımda eklemiştik)
-        const response = await axios.post('http://localhost:8080/api/auth/google-login', {
+        const response = await axios.post('${API_URL}/api/auth/google-login', {
             email: user.email
         });
 
