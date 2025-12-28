@@ -1,0 +1,17 @@
+package com.trafficlight.exception;
+
+/**
+ * HAFTA 3 - Exception Handling
+ * Exception thrown when trying to create a duplicate resource (409)
+ */
+public class DuplicateResourceException extends RuntimeException {
+    
+    public DuplicateResourceException(String message) {
+        super(message);
+    }
+
+    public DuplicateResourceException(String resourceName, String fieldName, Object fieldValue) {
+        super(String.format("%s already exists with %s: '%s'", resourceName, fieldName, fieldValue));
+    }
+}
+

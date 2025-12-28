@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: trafficlight_postgres
+    environment:
+      POSTGRES_DB: trafficlight_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups  # HAFTA 5 - Backup location
+    networks:
+      - trafficlight-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # PgAdmin for Database Management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: trafficlight_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@trafficlight.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - trafficlight-network
+    restart: unless-stopped
+
+  # Spring Boot Application (HAFTA 6 + JWT)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: trafficlight_app
+    environment:
+      # Database Configuration
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/trafficlight_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_FLYWAY_ENABLED: false
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      
+      # JWT Configuration - SPRINT 4
+      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      JWT_EXPIRATION: 86400000
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - trafficlight-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs  # Application logs
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  trafficlight-network:
+    driver: bridge
